@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CsvApi.Domain.models
+namespace CsvApi.Domain.Models
 {
     // Модель для хранения результатов интегрального чанализа CSV файлов
     public class Results
