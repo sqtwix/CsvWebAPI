@@ -9,8 +9,8 @@ namespace CsvApi.Application.Interfaces
 {
     public interface IValueRepository
     {
-        Task AddRangeAsync(IEnumerable<Values> entries);
+        Task AddRangeAsync(IEnumerable<Value> entries);
         Task DeleteByFileNameAsync(string fileName);
-        Task<List<Values>> GetLast10ByFileNameAsync(string fileName);
+        Task<List<Value>> GetLast10ByFileNameAsync(string fileName);
     }
 }

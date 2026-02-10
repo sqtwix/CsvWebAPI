@@ -10,11 +10,15 @@ namespace CsvApi.Application.Interfaces
 {
     public interface IResultRepository
     {
-        public interface IResultRepository
-        {
-            Task UpsertAsync(Results result); 
-            Task<List<Results>> GetByFiltersAsync(string? fileName, DateTimeOffset? startFrom, DateTimeOffset? startTo,
-                double? avgValueFrom, double? avgValueTo, double? avgExecFrom, double? avgExecTo);
-        }
+        Task UpsertAsync(Result result);
+
+        Task<List<Result>> GetByFiltersAsync(
+            string? fileName,
+            DateTimeOffset? startFrom,
+            DateTimeOffset? startTo,
+            double? avgValueFrom,
+            double? avgValueTo,
+            double? avgExecFrom,
+            double? avgExecTo);
     }
 }

@@ -5,8 +5,8 @@ namespace CsvApi.Infrastructure.Context
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Values> Values => Set<Values>();
-        public DbSet<Results> Results => Set<Results>();
+        public DbSet<Value> Values => Set<Value>();
+        public DbSet<Result> Results => Set<Result>();
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

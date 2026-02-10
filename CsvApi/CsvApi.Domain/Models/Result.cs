@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CsvApi.Domain.Models
 {
     // Модель для хранения результатов интегрального чанализа CSV файлов
-    public class Results
+    public class Result
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string FileName { get; set; } = null!;        // unique
