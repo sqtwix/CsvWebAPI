@@ -15,9 +15,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.8" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CsvApi.Application\CsvApi.Application.csproj" />
     <ProjectReference Include="..\CsvApi.Domain\CsvApi.Domain.csproj" />
   </ItemGroup>
 
