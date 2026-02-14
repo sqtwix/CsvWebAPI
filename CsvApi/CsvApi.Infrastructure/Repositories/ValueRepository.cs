@@ -20,7 +20,6 @@ namespace CsvApi.Infrastructure.Repositories
             _context = context;
         }
 
-
         // Добавляет запись в таблицу
         public async Task AddRangeAsync(IEnumerable<Value> entries)
         {

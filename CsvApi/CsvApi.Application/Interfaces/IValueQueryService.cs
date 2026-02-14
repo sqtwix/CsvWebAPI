@@ -4,6 +4,6 @@ namespace CsvApi.Application.Interfaces
 {
     public interface IValueQueryService
     {
-        Task<List<ValueDto>> GetLast10Async(string fileName, CancellationToken ct = default);
+        Task<List<ValueDto>> GetLast10Async(string fileName);
     }
 }
