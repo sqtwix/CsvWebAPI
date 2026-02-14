@@ -20,7 +20,6 @@ namespace CsvApi.Infrastructure.Repositories
             _context = context;
         }
 
-
         // Перезапись старого файла новым
         public async Task UpsertAsync(Result result)
         {
@@ -48,7 +47,7 @@ namespace CsvApi.Infrastructure.Repositories
 
             if (!string.IsNullOrWhiteSpace(fileName))
             {
-                query = query.Where(r => r.FileName.Contains(fileName));  
+                query = query.Where(r => r.FileName == fileName);
             }
 
             if (startFrom.HasValue)
