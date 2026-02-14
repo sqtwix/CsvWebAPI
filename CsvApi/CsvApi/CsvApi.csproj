@@ -19,4 +19,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CsvApi.Application\CsvApi.Application.csproj" />
+    <ProjectReference Include="..\CsvApi.Domain\CsvApi.Domain.csproj" />
+    <ProjectReference Include="..\CsvApi.Infrastructure\CsvApi.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
