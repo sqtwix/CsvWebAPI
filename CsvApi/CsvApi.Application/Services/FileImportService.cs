@@ -15,7 +15,10 @@ namespace CsvApi.Application.Services
 {
     public class FileImportService : IFileImportService
     {
-        // FileImportService -
+        // FileImportService - сервис для обработки загружаемых CSV-файлов,
+        // валидации данных, расчёта агрегированных результатов и сохранения их в БД.
+
+
         private readonly IValueRepository _valueRepository;
         private readonly IResultRepository _resultRepository;
         private readonly IUnitOfWork _uow;
