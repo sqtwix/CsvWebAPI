@@ -1,4 +1,5 @@
-﻿using CsvApi.Application.ExtraClasses;
+﻿using CsvApi.Application.Exceptions;
+using CsvApi.Application.ExtraClasses;
 using CsvApi.Application.Interfaces;
 using CsvApi.Domain.Models;
 using CsvHelper;
@@ -34,6 +35,9 @@ namespace CsvApi.Application.Services
         // Загрузка файла в БД
         public async Task ProcessCsvAsync(IFormFile file)
         {
+            // Список для сбора ошибок валидации
+            var errors = new List<string>();
+
             if (file == null || file.Length == 0)
             {
                 throw new ArgumentException("Файл пустой или не передан");
@@ -61,8 +65,20 @@ namespace CsvApi.Application.Services
                 Delimiter = ";",
                 HasHeaderRecord = true,
                 TrimOptions = TrimOptions.Trim,
-                BadDataFound = context => throw new FormatException(
-                    $"Ошибка формата в строке {context.Context.Parser.Row}: {context.Context.Parser.RawRecord}")
+
+                // Игнорируем ошибки парсинга и конвертации, но собираем их
+                MissingFieldFound = null,  
+                BadDataFound = null,      
+
+                ReadingExceptionOccurred = ex =>
+                {
+                    throw new InvalidCsvException($"Ошибка чтения CSV: {ex.ToString}");
+                },
+
+                ShouldSkipRecord = args =>
+                {
+                    return args.Row.Parser.Record == null || args.Row.Parser.Record.All(string.IsNullOrWhiteSpace);
+                }
             });
 
             await foreach (var record in csv.GetRecordsAsync<RawCsvRecord>())
@@ -110,30 +126,31 @@ namespace CsvApi.Application.Services
         // Дополнительный метод для валидации входных данных из файла
         private void ValidateRows(List<RawCsvRecord> records, string fileName)
         {
+            var errors = new List<string>();
+
             if (records.Count == 0)
-            {
-                throw new ArgumentException("Файл не содержит данных");
-            }
+                errors.Add("Файл не содержит данных");
 
             if (records.Count > 10000)
-            {
-                throw new ArgumentException("Превышено максимальное количество строк (10 000)");
-            }
+                errors.Add("Превышено максимальное количество строк (10 000)");
 
             var minDate = new DateTimeOffset(2000, 1, 1, 0, 0, 0, TimeSpan.Zero);
             var now = DateTimeOffset.UtcNow;
 
-            foreach (var r in records)
+            foreach (var (r, index) in records.Select((r, i) => (r, i)))
             {
                 if (r.Date < minDate || r.Date > now)
-                    throw new ArgumentException($"Недопустимая дата: {r.Date}");
+                    errors.Add($"Строка {index + 2}: недопустимая дата {r.Date} (должна быть между 2000-01-01 и текущим моментом)");
 
                 if (r.ExecutionTime < 0)
-                    throw new ArgumentException($"Отрицательное время выполнения: {r.ExecutionTime}");
+                    errors.Add($"Строка {index + 2}: отрицательное время выполнения {r.ExecutionTime}");
 
                 if (r.Value < 0)
-                    throw new ArgumentException($"Отрицательное значение показателя: {r.Value}");
+                    errors.Add($"Строка {index + 2}: отрицательное значение показателя {r.Value}");
             }
+
+            if (errors.Any())
+                throw new InvalidCsvException(errors);
         }
 
         // Вспомогательный метод для агрегации данных

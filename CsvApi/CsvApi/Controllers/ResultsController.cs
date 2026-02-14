@@ -1,4 +1,5 @@
 ﻿using CsvApi.Application.DTOs;
+using CsvApi.Application.Exceptions;
 using CsvApi.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,6 +46,14 @@ namespace CsvApi.Controllers
                 await _fileImportService.ProcessCsvAsync(file);
                 return Ok("Файл успешно обработан и сохранён");
             }
+            catch (InvalidCsvException ex)
+            {
+                return BadRequest(new
+                {
+                    Message = "Файл не прошёл валидацию",
+                    Errors = ex.Message.Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                });
+            }
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
@@ -53,10 +62,10 @@ namespace CsvApi.Controllers
             {
                 return BadRequest($"Ошибка формата CSV: {ex.Message}");
             }
-            catch (Exception)
-            {
-                return StatusCode(500, "Internal serrver error");
-            }
+            //catch (Exception)
+            //{
+            //    return StatusCode(500, "Internal server error");
+            //}
         }
 
         /// <summary>
